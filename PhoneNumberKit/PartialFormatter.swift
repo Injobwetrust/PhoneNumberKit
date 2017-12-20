@@ -288,7 +288,10 @@ public final class PartialFormatter {
     func applyFormat(_ rawNumber: String, formats: [MetadataPhoneNumberFormat]) -> String? {
         guard let regexManager = regexManager else { return nil }
         for format in formats {
-            if let pattern = format.pattern, let formatTemplate = format.format {
+            if let pattern = format.pattern, var formatTemplate = format.format {
+                if formatTemplate == "$1 $2-$3-$4" {
+                    formatTemplate = "($1) $2-$3-$4"
+                }
                 let patternRegExp = String(format: PhoneNumberPatterns.formatPattern, arguments: [pattern])
                 do {
                     let matches = try regexManager.regexMatches(patternRegExp, string: rawNumber)
